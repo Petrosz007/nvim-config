@@ -1,0 +1,24 @@
+{
+  "plugins": {
+    "mini": {
+      "rev": "94cae46",
+      "src": "https://github.com/nvim-mini/mini.nvim",
+      "version": "'v0.16.0'"
+    },
+    "planery": {
+      "rev": "5001291",
+      "src": "https://github.com/nvim-lua/plenary.nvim",
+      "version": "'v0.1.4'"
+    },
+    "telescope": {
+      "rev": "a0bbec2",
+      "src": "https://github.com/nvim-telescope/telescope.nvim",
+      "version": "'0.1.8'"
+    },
+    "todo-comments": {
+      "rev": "ae0a2af",
+      "src": "https://github.com/folke/todo-comments.nvim",
+      "version": "'v1.4.0'"
+    }
+  }
+}
