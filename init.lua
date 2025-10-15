@@ -63,9 +63,13 @@ vim.opt.scrolloff = 10
 -- Set highlight on search, but clear on pressing <Esc> in normal mode
 vim.opt.hlsearch = true
 
+vim.o.background = 'dark'
+vim.cmd([[colorscheme retrobox]]) -- TODO: Is there a more lua way of doing this?
+
 vim.keymap.set('i', 'jk', '<ESC>')
 vim.keymap.set('n', 'gb', '<C-T>', { desc = '[g]o [b]ack' }) -- TODO: This might not work all the time, investigate
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
+vim.keymap.set('n', '<Leader>cr', '<CMD>source $MYVIMRC<CR>', { desc = '[c]onfig [r]eload' })
 
 vim.pack.add({
   { src = 'https://github.com/nvim-lua/plenary.nvim',         name = 'planery',       version = 'v0.1.4' },
@@ -122,9 +126,11 @@ miniclue.setup({
     miniclue.gen_clues.registers(),
     miniclue.gen_clues.windows(),
     miniclue.gen_clues.z(),
+    { mode = 'n', keys = '<Leader>b', desc = '+Buffer' },
+    { mode = 'n', keys = '<Leader>c', desc = '+Config' },
+    { mode = 'n', keys = '<Leader>h', desc = '+Help' },
     { mode = 'n', keys = '<Leader>s', desc = '+Search' },
     { mode = 'n', keys = '<Leader>t', desc = '+Toggle' },
-    { mode = 'n', keys = '<Leader>b', desc = '+Buffer' },
   },
 })
 
@@ -133,7 +139,10 @@ miniclue.setup({
 local builtin = require('telescope.builtin')
 
 vim.keymap.set("n", "<Leader>sf", builtin.find_files, { desc = "[s]earch [f]iles" })
-vim.keymap.set("n", "<Leader>sh", builtin.help_tags, { desc = "[s]earch [h]elp" })
+vim.keymap.set("n", "<Leader>cc", builtin.colorscheme, { desc = "[c]onfig [c]olorscheme" })
+vim.keymap.set("n", "<Leader>ls", builtin.lsp_document_symbols, { desc = "[l]sp [s]ymbols" })
+vim.keymap.set("n", "<Leader>hh", builtin.help_tags, { desc = "[h]elp [h]elp" })
+vim.keymap.set("n", "<Leader>hk", builtin.keymaps, { desc = "[h]elp [k]eymaps" })
 
 ------------------
 -- Mini
@@ -149,11 +158,12 @@ require('mini.notify').setup()
 require('mini.icons').setup()
 require('mini.completion').setup()
 require('mini.statusline').setup({
-  use_icons = false, -- TODO: Somehow the icons don't show up properly on the statusline
+  use_icons = true, -- TODO: Somehow the icons don't show up properly on the statusline
 })
 require('mini.diff').setup({
   view = { style = 'sign' }
 })
+require('mini.colors').setup()
 
 -- Open minimap by default
 MiniMap.open()
@@ -167,9 +177,12 @@ MiniIcons.tweak_lsp_kind()
 ------------
 -- LSP
 vim.keymap.set("n", "<Leader>bf", vim.lsp.buf.format, { desc = "[b]uffer [f]ormat" })
+vim.keymap.set("n", "<Leader>ld", vim.diagnostic.setloclist, { desc = "[l]sp [d]iagnostics" })
 
 vim.lsp.enable({
   'lua_ls',
+  'golangci_lint_ls',
+  'gopls',
 })
 
 
@@ -200,3 +213,17 @@ vim.api.nvim_create_autocmd('LspAttach', {
 -- Treesitter
 -- Nerd icons / mini.icons should work
 --
+--
+
+-- From: https://yobibyte.github.io/vim.html
+-- Other inspiration: https://erock-git-dotfiles.pgs.sh/tree/main/item/dot_config/nvim/init.lua.html
+vim.keymap.set("n", "<space>x", function()
+  vim.ui.input({}, function(c)
+    if c and c ~= "" then
+      vim.cmd("noswapfile vnew")
+      vim.bo.buftype = "nofile"
+      vim.bo.bufhidden = "wipe"
+      vim.api.nvim_buf_set_lines(0, 0, -1, false, vim.fn.systemlist(c))
+    end
+  end)
+end, { desc = "e[x]ecute" })
