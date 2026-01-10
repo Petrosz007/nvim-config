@@ -139,6 +139,7 @@ miniclue.setup({
 local builtin = require('telescope.builtin')
 
 vim.keymap.set("n", "<Leader>sf", builtin.find_files, { desc = "[s]earch [f]iles" })
+vim.keymap.set("n", "<Leader>bb", builtin.buffers, { desc = "[b]uffer [b]uffers" })
 vim.keymap.set("n", "<Leader>cc", builtin.colorscheme, { desc = "[c]onfig [c]olorscheme" })
 vim.keymap.set("n", "<Leader>ls", builtin.lsp_document_symbols, { desc = "[l]sp [s]ymbols" })
 vim.keymap.set("n", "<Leader>hh", builtin.help_tags, { desc = "[h]elp [h]elp" })
